@@ -1,9 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+require 'base64'
 
 describe NSISam do
 
   before :all do
-    @nsisam = NSICloudooo::Client.new 'http://test:test@localhost:8888'
+    @nsicloudooo = NSICloudooo::Client.new 'http://test:test@localhost:8888'
     @keys = Array.new
     @fake_cloudooo = NSICloudooo::FakeServerManager.new.start_server
   end
@@ -12,24 +13,13 @@ describe NSISam do
     @fake_cloudooo.stop_server
   end
 
-  context "storing" do
-    it "can store a value in SAM" do
-      response = @nsisam.store("something")
+  context "granulation" do
+    it "can send a video to be granulated by a cloudooo node" do
+      document = Base64::encode64(File.new('26images-1table.odt', 'r').read)
+      response = @nsicloudooo.granulate(document)
       response.should_not be_nil
-      response.should have_key("key")
-      response.should have_key("checksum")
-    end
-  end
-
-  context "deleting" do
-    it "can delete a stored value" do
-      @nsisam.store("delete this")["key"].should == 'value delete this stored'
-      response = @nsisam.delete("delete this")
-      response["deleted"].should be_true
-    end
-
-    it "raises error when key not found" do
-      expect { @nsisam.delete("i dont exist") }.to raise_error(NSISam::Errors::Client::KeyNotFoundError)
+      response.should have_key("images")
+      response.should have_key("tables")
     end
   end
 
