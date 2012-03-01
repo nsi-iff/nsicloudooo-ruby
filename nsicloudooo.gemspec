@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "nsicloudooo"
-  s.version = ""
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Douglas Camata"]
@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
+    "VERSION",
     "lib/client.rb",
     "lib/errors.rb",
     "lib/nsicloudooo.rb",
