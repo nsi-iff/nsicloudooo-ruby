@@ -5,6 +5,9 @@ coverage.data
 # rdoc generated
 rdoc
 
+# rvm files
+.rvmrc
+
 # vim generated
 *.swp
 *.swo
