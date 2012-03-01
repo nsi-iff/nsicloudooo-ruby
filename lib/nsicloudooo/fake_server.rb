@@ -50,17 +50,23 @@ module NSICloudooo
   end
 
   class FakeServerManager
-    def start_server
+
+    # Start the nsi.cloudooo fake server
+    #
+    # @param [Fixnum] port the port where the fake server will listen
+    #   * make sure there's not anything else listenning on this port
+    def start_server(port=8886)
       @thread = Thread.new do
-        Server.prepare
-        Server.run! :port => 8886
+        Server.run! :port => port
       end
       sleep(1)
       self
     end
 
+    # Stop the SAM fake server
     def stop_server
       @thread.kill
+      self
     end
   end
 end
