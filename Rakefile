@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "nsicloudooo"
   gem.homepage = "http://github.com/nsi-iff/nsicloudooo-ruby.git"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{A simple gem to access a nsi.cloudooo node}
+  gem.description = %Q{A simple gem to access a nsi.cloudooo node}
   gem.email = "d.camata@gmail.com"
   gem.authors = ["Douglas Camata"]
   # dependencies defined in Gemfile
