@@ -1,9 +1,8 @@
 require "json"
 require "net/http"
-require "errors"
+require File.dirname(__FILE__) + '/errors'
 
-module Client
-
+module NSICloudooo
   class Client
 
     def initialize(url)
@@ -13,22 +12,29 @@ module Client
       @port = url.match(/([0-9]+)(\/)?$/)[1]
     end
 
-    def granulate_doc(file, filename, options = {})
+    def granulate(options = {})
       @request_data = Hash.new
       if options[:doc_link]
         insert_download_data options
       else
-        @request_data.merge! {:file => file, :filename => filename}
+        file_data = {:doc => options[:file], :filename => options[:filename]}
+        @request_data.merge! file_data
       end
       insert_callback_data options
-      request = prepare_request :POST, @request_data
+      request = prepare_request :POST, @request_data.to_json
+      execute_request(request)
+    end
+
+    def done(key)
+      request = prepare_request :GET, {:key => key}.to_json
       execute_request(request)
     end
 
     private
 
     def insert_download_data(options)
-      @request_data.merge! {:doc_link => options[:doc_link]}
+      download_data = {doc_link: options[:doc_link]}
+      @request_data.merge! download_data
     end
 
     def insert_callback_data(options)
