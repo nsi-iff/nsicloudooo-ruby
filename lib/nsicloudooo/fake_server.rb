@@ -57,6 +57,7 @@ module NSICloudooo
     #   * make sure there's not anything else listenning on this port
     def start_server(port=8886)
       @thread = Thread.new do
+        Server.prepare
         Server.run! :port => port
       end
       sleep(1)
