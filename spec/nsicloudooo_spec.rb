@@ -1,6 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 require 'base64'
-require 'nsisam'
 
 $folder = File.expand_path(File.dirname(__FILE__))
 
