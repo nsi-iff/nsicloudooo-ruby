@@ -67,6 +67,22 @@ module NSICloudooo
       execute_request(request)
     end
 
+    # Return the keys of the grains of a document
+    #
+    # @raise NSICloudooo::Errors::Client:KeyNotFoundError when an invalid document key is provided
+    #
+    # @param [String] key of the desired document
+    # @return [Hash] response
+    #   * "images" [String] keys to the images grains of the document
+    #   * "files" [String] keys to the files grains of the document
+    #
+    # @example
+    #   nsicloudooo.grains_kets_for("some key")
+    def grains_keys_for(document_key)
+      request = prepare_request :GET, {:doc_key => document_key}.to_json
+      execute_request(request)
+    end
+
     private
 
     def insert_download_data(options)
