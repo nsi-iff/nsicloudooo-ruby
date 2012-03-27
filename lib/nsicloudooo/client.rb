@@ -16,6 +16,7 @@ module NSICloudooo
     #
     # @param [Hash] options used to send a document to be graulated
     # @option options [String] file the base64 encoded file to be granulated
+    # @option options [String] sam_uid the UID of a document at SAM
     # @option options [String] filename the filename of the document
     # @note the filename is very importante, the cloudooo node will convert the document based on its filename, if necessary
     # @option options [String] doc_link link to the document that'll be granulated
@@ -26,6 +27,11 @@ module NSICloudooo
     # @example A simple granulation
     #   doc = Base64.encode64(File.new('document.odt', 'r').read)
     #   nsicloudooo.granulate(:file => doc, :filename => 'document.odt')
+    # @example Granulating from a SAM uid
+    #   doc = Base64.encode64(File.new('document.odt', 'r').read)
+    #   response = sam.store {:doc => doc, :granulated => false}
+    #   doc_key = response["key"]
+    #   nsicloudooo.granulate(:sam_uid => doc_key, :filename => 'document.odt')
     # @example Downloading and granulating from web
     #   nsicloudooo.granulate(:doc_link => 'http://google.com/document.odt')
     # @example Sending a callback url
@@ -38,11 +44,14 @@ module NSICloudooo
     #   nsicloudooo.granulate(:doc_link => 'http://google.com/document.odt', :callback => 'http://google.com', :verb => "PUT")
     #
     # @return [Hash] response
-    #   * "key" [String] the key to access the granulated document if the sam node it was stored
+    #   * "doc_key" [String] the key to access the granulated document if the sam node it was stored
     def granulate(options = {})
       @request_data = Hash.new
       if options[:doc_link]
         insert_download_data options
+      elsif options[:sam_uid]
+        file_data = {:sam_uid => options[:sam_uid], :filename => options[:filename]}
+        @request_data.merge! file_data
       else
         file_data = {:doc => options[:file], :filename => options[:filename]}
         @request_data.merge! file_data
@@ -77,7 +86,7 @@ module NSICloudooo
     #   * "files" [String] keys to the files grains of the document
     #
     # @example
-    #   nsicloudooo.grains_kets_for("some key")
+    #   nsicloudooo.grains_keys_for("some key")
     def grains_keys_for(document_key)
       request = prepare_request :GET, {:doc_key => document_key}.to_json
       execute_request(request)
