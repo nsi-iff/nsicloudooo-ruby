@@ -27,7 +27,7 @@ module NSICloudooo
         sleep seconds-1
       end
       {
-        key: "key for document #{filename}",
+        doc_key: "key for document #{filename}",
         callback: callback,
         verb: verb,
       }.to_json
@@ -55,7 +55,7 @@ module NSICloudooo
     #
     # @param [Fixnum] port the port where the fake server will listen
     #   * make sure there's not anything else listenning on this port
-    def start_server(port=8886)
+    def start_server(port=9886)
       @thread = Thread.new do
         Server.prepare
         Server.run! :port => port

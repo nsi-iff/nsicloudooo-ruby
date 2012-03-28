@@ -6,7 +6,7 @@ $folder = File.expand_path(File.dirname(__FILE__))
 describe NSICloudooo do
 
   before :all do
-    @nsicloudooo = NSICloudooo::Client.new 'http://test:test@localhost:8886'
+    @nsicloudooo = NSICloudooo::Client.new 'http://test:test@localhost:9886'
     @fake_cloudooo = NSICloudooo::FakeServerManager.new.start_server
   end
 
@@ -18,7 +18,7 @@ describe NSICloudooo do
     it "can send a document to be granulated by a cloudooo node" do
       response = @nsicloudooo.granulate(:file => 'document', :filename => 'test.odt')
       response.should_not be_nil
-      response["key"].should == "key for document test.odt"
+      response["doc_key"].should == "key for document test.odt"
     end
   end
 
@@ -26,7 +26,7 @@ describe NSICloudooo do
     it "can send document in a closed format to be granulated by a cloudooo node" do
       response = @nsicloudooo.granulate(:file => 'document', :filename => 'test.doc')
       response.should_not be_nil
-      response["key"].should == "key for document test.doc"
+      response["doc_key"].should == "key for document test.doc"
     end
   end
 
@@ -34,7 +34,7 @@ describe NSICloudooo do
     it "can download documents from a link to be granulated by a cloudooo node" do
       response = @nsicloudooo.granulate(:doc_link => "http://doc_link/test.doc")
       response.should_not be_nil
-      response["key"].should == "key for document test.doc"
+      response["doc_key"].should == "key for document test.doc"
     end
   end
 
@@ -42,14 +42,14 @@ describe NSICloudooo do
     it "can send a document to be granulated by a cloudooo node and specify a callback url" do
       response = @nsicloudooo.granulate(:file => 'document', :filename => 'test.odt', :callback => 'http://google.com')
       response.should_not be_nil
-      response["key"].should == "key for document test.odt"
+      response["doc_key"].should == "key for document test.odt"
       response["callback"].should == 'http://google.com'
     end
 
     it "can send a document to be granulated by a cloudooo node and specify the verb" do
       response = @nsicloudooo.granulate(:file => 'document', :filename => 'test.odt', :callback => 'http://google.com', :verb => 'PUT')
       response.should_not be_nil
-      response["key"].should == "key for document test.odt"
+      response["doc_key"].should == "key for document test.odt"
       response["callback"].should == 'http://google.com'
       response["verb"].should == 'PUT'
     end
@@ -57,7 +57,7 @@ describe NSICloudooo do
 
   context "verify granulation" do
     it "can verify is a granulation is done or no" do
-      key = @nsicloudooo.granulate(:file => 'document', :filename => '2secs.odt')["key"]
+      key = @nsicloudooo.granulate(:file => 'document', :filename => '2secs.odt')["doc_key"]
       @nsicloudooo.done(key)["done"].should be_false
       @nsicloudooo.done(key)["done"].should be_true
     end
