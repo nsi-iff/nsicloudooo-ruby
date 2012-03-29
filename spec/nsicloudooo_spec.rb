@@ -56,10 +56,18 @@ describe NSICloudooo do
   end
 
   context "verify granulation" do
-    it "can verify is a granulation is done or no" do
+    it "can verify is a granulation is done or not" do
       key = @nsicloudooo.granulate(:file => 'document', :filename => '2secs.odt')["doc_key"]
       @nsicloudooo.done(key)["done"].should be_false
       @nsicloudooo.done(key)["done"].should be_true
+      @nsicloudooo.grains_keys_for(key)["images"].should have(0).images
+      @nsicloudooo.grains_keys_for(key)["files"].should have(0).files
+    end
+
+    it "can access the keys for all its grains" do
+      key = @nsicloudooo.granulate(:file => 'document', :filename => '2secs.odt')["doc_key"]
+      @nsicloudooo.grains_keys_for(key)["images"].should have(0).images
+      @nsicloudooo.grains_keys_for(key)["files"].should have(0).files
     end
 
     it "raises an error whentrying to verify if non-existing key is done" do

@@ -36,16 +36,17 @@ module NSICloudooo
     get "/" do
       content_type :json
       incoming = JSON.parse(request.body.read)
-      if incoming["key"].include? "secs"
+      if incoming.has_key?("key") && incoming["key"].include?("secs")
         unless @@done.has_key? incoming["key"]
           @@done[incoming["key"]] = true
           return {done: false}.to_json
         else
           return {done: true}.to_json
         end
-      else
-        return 404 if incoming["key"].include? "dont"
+      elsif incoming.has_key? "doc_key"
+        return {:images => [], :files => []}.to_json
       end
+    return 404 if incoming["key"].include? "dont"
     end
   end
 
