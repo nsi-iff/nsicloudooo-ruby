@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "nsicloudooo"
-  s.version = "0.2.4"
+  s.version = "0.2.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Douglas Camata"]
-  s.date = "2012-03-27"
+  s.date = "2012-03-29"
   s.description = "A simple gem to access a nsi.cloudooo node"
   s.email = "d.camata@gmail.com"
   s.extra_rdoc_files = [
