@@ -25,12 +25,13 @@ module NSICloudooo
     # @option options [String] verb the callback request verb, when not provided, nsi.cloudooo default to POST
     #
     # @example A simple granulation
+    #   require 'base64'
     #   doc = Base64.encode64(File.new('document.odt', 'r').read)
     #   nsicloudooo.granulate(:file => doc, :filename => 'document.odt')
     # @example Granulating from a SAM uid
     #   doc = Base64.encode64(File.new('document.odt', 'r').read)
-    #   response = sam.store {:doc => doc, :granulated => false}
-    #   doc_key = response["key"]
+    #   response = sam.store({:doc => doc})
+    #   doc_key = response["doc_key"]
     #   nsicloudooo.granulate(:sam_uid => doc_key, :filename => 'document.odt')
     # @example Downloading and granulating from web
     #   nsicloudooo.granulate(:doc_link => 'http://google.com/document.odt')
