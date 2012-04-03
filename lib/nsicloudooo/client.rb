@@ -27,14 +27,20 @@ module NSICloudooo
     # @example A simple granulation
     #   require 'base64'
     #   doc = Base64.encode64(File.new('document.odt', 'r').read)
-    #   nsicloudooo.granulate(:file => doc, :filename => 'document.odt')
+    #   response = nsicloudooo.granulate(:file => doc, :filename => 'document.odt')
+    #   nsicloudooo.done(response["doc_key"])
+    #   nsicloudooo.grains_keys_for(response["doc_key"])
     # @example Granulating from a SAM uid
     #   doc = Base64.encode64(File.new('document.odt', 'r').read)
     #   response = sam.store({:doc => doc})
     #   doc_key = response["doc_key"]
-    #   nsicloudooo.granulate(:sam_uid => doc_key, :filename => 'document.odt')
+    #   response = nsicloudooo.granulate(:sam_uid => doc_key, :filename => 'document.odt')
+    #   nsicloudooo.done(response["doc_key"])
+    #   nsicloudooo.grains_keys_for(response["doc_key"])
     # @example Downloading and granulating from web
-    #   nsicloudooo.granulate(:doc_link => 'http://google.com/document.odt')
+    #   response = nsicloudooo.granulate(:doc_link => 'http://google.com/document.odt')
+    #   nsicloudooo.done(response["doc_key"])
+    #   nsicloudooo.grains_keys_for(response["doc_key"])
     # @example Sending a callback url
     #   doc = Base64.encode64(File.new('document.odt', 'r').read)
     #   nsicloudooo.granulate(:file => doc, :filename => 'document.odt', :callback => 'http://google.com')
@@ -46,6 +52,12 @@ module NSICloudooo
     #
     # @return [Hash] response
     #   * "doc_key" [String] the key to access the granulated document if the sam node it was stored
+    #
+    # @raise NSICloudooo::Errors::Client::MissingParametersError when an invalid or incomplete set of parameters is provided
+    # @raise NSICloudooo::Errors::Client::SAMConnectionError when cannot connect to the SAM node
+    # @raise NSICloudooo::Errors::Client::AuthenticationError when invalids user and/or password are provided
+    # @raise NSICloudooo::Errors::Client::KeyNotFoundError when an invalid sam_uid is provided
+    #
     def granulate(options = {})
       @request_data = Hash.new
       if options[:doc_link]
@@ -66,7 +78,6 @@ module NSICloudooo
 
     # Verify if a document is already granulated
     #
-    # @raise NSICloudooo::Errors::Client:KeyNotFoundError when an invalid document key is provided
     #
     # @param [String] key of the desired document
     # @return [Hash] response
@@ -74,6 +85,11 @@ module NSICloudooo
     #
     # @example
     #   nsicloudooo.done("some key")
+    #
+    # @raise NSICloudooo::Errors::Client::SAMConnectionError when cannot connect to the SAM node
+    # @raise NSICloudooo::Errors::Client::AuthenticationError when invalids user and/or password are provided
+    # @raise NSICloudooo::Errors::Client::KeyNotFoundError when an invalid key is provided
+    #
     def done(key)
       request = prepare_request :GET, {:key => key}.to_json
       execute_request(request)
@@ -81,7 +97,6 @@ module NSICloudooo
 
     # Return the keys of the grains of a document
     #
-    # @raise NSICloudooo::Errors::Client:KeyNotFoundError when an invalid document key is provided
     #
     # @param [String] key of the desired document
     # @return [Hash] response
@@ -90,6 +105,11 @@ module NSICloudooo
     #
     # @example
     #   nsicloudooo.grains_keys_for("some key")
+    #
+    # @raise NSICloudooo::Errors::Client::SAMConnectionError when cannot connect to the SAM node
+    # @raise NSICloudooo::Errors::Client::AuthenticationError when invalids user and/or password are provided
+    # @raise NSICloudooo::Errors::Client::KeyNotFoundError when an invalid key is provided
+    #
     def grains_keys_for(document_key)
       request = prepare_request :GET, {:doc_key => document_key}.to_json
       execute_request(request)
