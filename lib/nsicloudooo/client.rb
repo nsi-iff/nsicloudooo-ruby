@@ -50,12 +50,14 @@ module NSICloudooo
       @request_data = Hash.new
       if options[:doc_link]
         insert_download_data options
-      elsif options[:sam_uid]
+      elsif options[:sam_uid] && options[:filename]
         file_data = {:sam_uid => options[:sam_uid], :filename => options[:filename]}
         @request_data.merge! file_data
-      else
+      elsif options[:file] && options[:filename]
         file_data = {:doc => options[:file], :filename => options[:filename]}
         @request_data.merge! file_data
+      else
+        raise NSICloudooo::Errors::Client::MissingParametersError
       end
       insert_callback_data options
       request = prepare_request :POST, @request_data.to_json
@@ -118,6 +120,11 @@ module NSICloudooo
         http.request(request)
       end
       raise NSICloudooo::Errors::Client::KeyNotFoundError if response.code == "404"
+      raise NSICloudooo::Errors::Client::MalformedRequestError if response.code == "400"
+      raise NSICloudooo::Errors::Client::AuthenticationError if response.code == "401"
+      if response.code == "500" and response.body.include?("SAM")
+        raise NSICloudooo::Errors::Client::SAMConnectionError
+      end
       JSON.parse(response.body)
     end
   end
