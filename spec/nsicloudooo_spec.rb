@@ -20,6 +20,12 @@ describe NSICloudooo do
       response.should_not be_nil
       response["doc_key"].should == "key for document test.odt"
     end
+
+    it "should throw error if any required parameter is missing" do
+      expect { @nsicloudooo.granulate(:file => 'document') }.to raise_error(NSICloudooo::Errors::Client::MissingParametersError)
+      expect { @nsicloudooo.granulate(:sam_uid => 'document') }.to raise_error(NSICloudooo::Errors::Client::MissingParametersError)
+      expect { @nsicloudooo.granulate(:filename => 'document') }.to raise_error(NSICloudooo::Errors::Client::MissingParametersError)
+    end
   end
 
   context "granulation with conversion" do
