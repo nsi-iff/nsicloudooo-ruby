@@ -6,11 +6,6 @@ require "thread"
 module NSICloudooo
   class Server < Sinatra::Application
 
-    configure :development do
-      Dir.mkdir('logs') unless File.exist?('logs')
-      $stderr.reopen("logs/output.log", "w")
-    end
-
     def self.prepare
       @@done = Hash.new
     end
