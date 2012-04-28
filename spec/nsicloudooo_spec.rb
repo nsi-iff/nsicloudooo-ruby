@@ -14,6 +14,14 @@ describe NSICloudooo do
     @fake_cloudooo.stop_server
   end
 
+  context "cannot connect to the server" do
+    it "throws error if couldn't connec to the server" do
+      nsicloudooo = NSICloudooo::Client.new 'http://test:test@localhost:4000'
+      expect { nsicloudooo.granulate(:file => 'document', :filename => "teste.odt") }.to \
+             raise_error(NSICloudooo::Errors::Client::ConnectionRefusedError)
+    end
+  end
+
   context "simple granulation" do
     it "can send a document to be granulated by a cloudooo node" do
       response = @nsicloudooo.granulate(:file => 'document', :filename => 'test.odt')
