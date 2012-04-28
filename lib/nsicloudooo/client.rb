@@ -136,16 +136,21 @@ module NSICloudooo
     end
 
     def execute_request(request)
-      response = Net::HTTP.start @url, @port do |http|
-        http.request(request)
+      begin
+        response = Net::HTTP.start @url, @port do |http|
+          http.request(request)
+        end
+      rescue Errno::ECONNREFUSED => e
+        raise NSICloudooo::Errors::Client::ConnectionRefusedError
+      else
+        raise NSICloudooo::Errors::Client::KeyNotFoundError if response.code == "404"
+        raise NSICloudooo::Errors::Client::MalformedRequestError if response.code == "400"
+        raise NSICloudooo::Errors::Client::AuthenticationError if response.code == "401"
+        if response.code == "500" and response.body.include?("SAM")
+          raise NSICloudooo::Errors::Client::SAMConnectionError
+        end
+        JSON.parse(response.body)
       end
-      raise NSICloudooo::Errors::Client::KeyNotFoundError if response.code == "404"
-      raise NSICloudooo::Errors::Client::MalformedRequestError if response.code == "400"
-      raise NSICloudooo::Errors::Client::AuthenticationError if response.code == "401"
-      if response.code == "500" and response.body.include?("SAM")
-        raise NSICloudooo::Errors::Client::SAMConnectionError
-      end
-      JSON.parse(response.body)
     end
   end
 end

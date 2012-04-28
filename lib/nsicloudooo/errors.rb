@@ -15,6 +15,9 @@ module NSICloudooo
 
       class SAMConnectionError < RuntimeError
       end
+
+      class ConnectionRefusedError < RuntimeError
+      end
     end
   end
 end
