@@ -135,6 +135,13 @@ module NSICloudooo
     #
     # @yield a Configuration object (see {NSICloudooo::Client::Configuration})
     # 
+    # @example
+    #   NSICloudooo::Client.configure do
+    #     user     "why"
+    #     password "chunky"
+    #     host     "localhost"
+    #     port     "8888"
+    #   end
     def self.configure(&block)
       Configuration.instance_eval(&block)
     end
