@@ -1,15 +1,31 @@
 require "json"
 require "net/http"
 require File.dirname(__FILE__) + '/errors'
+require File.dirname(__FILE__) + '/configuration'
 
 module NSICloudooo
   class Client
 
-    def initialize(url)
-      user_and_pass = url.match(/(\w+):(\w+)/)
-      @user, @password = user_and_pass[1], user_and_pass[2]
-      @url = url.match(/@(.*):/)[1]
-      @port = url.match(/([0-9]+)(\/)?$/)[1]
+    # Initialize a client to a CloudoooManager node
+    #
+    # @param [Hash] options used to connect to the desired CloudoooManager
+    # @options options [String] host to connect
+    # @options options [String] port to connect
+    # @options options [String] user to authenticatie with
+    # @options options [String] password to the refered user
+    #
+    # @return [Client] the object itself
+    # @example
+    #   nsisam = NSISam::Client.new host: 'localhost', port: '8886', user: 'test', password: 'test'
+    #
+    # @note if you had used the 'configure' method, you can use it without parameters
+    #       and those you provided before will be used (see Client#configure)
+    def initialize(params = {})
+      params = Configuration.settings.merge(params)
+      @user = params[:user]
+      @password = params[:password]
+      @host = params[:host]
+      @port = params[:port]
     end
 
     # Send a document be granulated by a nsi.cloudooo node
@@ -115,6 +131,14 @@ module NSICloudooo
       execute_request(request)
     end
 
+    # Pre-configure the NSICloudooo module with default params for the NSICloudooo::Client
+    #
+    # @yield a Configuration object (see {NSICloudooo::Client::Configuration})
+    # 
+    def self.configure(&block)
+      Configuration.instance_eval(&block)
+    end
+
     private
 
     def insert_download_data(options)
@@ -137,7 +161,7 @@ module NSICloudooo
 
     def execute_request(request)
       begin
-        response = Net::HTTP.start @url, @port do |http|
+        response = Net::HTTP.start @host, @port do |http|
           http.request(request)
         end
       rescue Errno::ECONNREFUSED => e
