@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Douglas Camata"]
-  s.date = "2012-05-16"
+  s.date = "2012-05-25"
   s.description = "A simple gem to access a nsi.cloudooo node"
   s.email = "d.camata@gmail.com"
   s.extra_rdoc_files = [
@@ -37,7 +37,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/nsi-iff/nsicloudooo-ruby.git"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.24"
+  s.rubygems_version = "1.8.21"
   s.summary = "A simple gem to access a nsi.cloudooo node"
 
   if s.respond_to? :specification_version then
