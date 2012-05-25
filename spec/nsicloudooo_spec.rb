@@ -6,7 +6,8 @@ $folder = File.expand_path(File.dirname(__FILE__))
 describe NSICloudooo do
 
   before :all do
-    @nsicloudooo = NSICloudooo::Client.new 'http://test:test@localhost:9886'
+    @nsicloudooo = NSICloudooo::Client.new user: 'test', password: 'test',
+                                           host: 'localhost', port: '9886'
     @fake_cloudooo = NSICloudooo::FakeServerManager.new.start_server
   end
 
@@ -16,7 +17,8 @@ describe NSICloudooo do
 
   context "cannot connect to the server" do
     it "throws error if couldn't connec to the server" do
-      nsicloudooo = NSICloudooo::Client.new 'http://test:test@localhost:4000'
+      nsicloudooo = NSICloudooo::Client.new user: 'test', password: 'test',
+                                           host: 'localhost', port: '4000'
       expect { nsicloudooo.granulate(:file => 'document', :filename => "teste.odt") }.to \
              raise_error(NSICloudooo::Errors::Client::ConnectionRefusedError)
     end
@@ -31,7 +33,7 @@ describe NSICloudooo do
 
     it "should throw error if any required parameter is missing" do
       expect { @nsicloudooo.granulate(:file => 'document') }.to raise_error(NSICloudooo::Errors::Client::MissingParametersError)
-      expect { @nsicloudooo.granulate(:sam_uid => 'document') }.to raise_error(NSICloudooo::Errors::Client::MissingParametersError)
+      expect { @nsicloudooo.granulate(:cloudooo_uid => 'document') }.to raise_error(NSICloudooo::Errors::Client::MissingParametersError)
       expect { @nsicloudooo.granulate(:filename => 'document') }.to raise_error(NSICloudooo::Errors::Client::MissingParametersError)
     end
   end
@@ -92,6 +94,33 @@ describe NSICloudooo do
       expect { @nsicloudooo.granulate(:file => 'document', :filename => 'queue error' ).should be_false }.to raise_error(NSICloudooo::Errors::Client::QueueServiceConnectionError)
     end
 
+  end
+
+  context "get configuration" do
+    before do
+      NSICloudooo::Client.configure do
+        user     "why"
+        password "chunky"
+        host     "localhost"
+        port     "8888"
+      end
+    end
+
+    it "by configure" do
+      cloudooo = NSICloudooo::Client.new
+      cloudooo.instance_variable_get(:@user).should == "why"
+      cloudooo.instance_variable_get(:@password).should == "chunky"
+      cloudooo.instance_variable_get(:@host).should == "localhost"
+      cloudooo.instance_variable_get(:@port).should == "8888"
+    end
+
+    it "by initialize parameters" do
+      cloudooo = NSICloudooo::Client.new(user: 'luckystiff', password: 'bacon', host: 'why.com', port: '9999')
+      cloudooo.instance_variable_get(:@user).should == "luckystiff"
+      cloudooo.instance_variable_get(:@password).should == "bacon"
+      cloudooo.instance_variable_get(:@host).should == "why.com"
+      cloudooo.instance_variable_get(:@port).should == "9999"
+    end
   end
 
 end
