@@ -20,6 +20,8 @@ module NSICloudooo
       if filename.include? "secs"
         seconds = filename.split(".")[0].delete("secs").to_i
         sleep seconds-1
+      elsif filename.include? "queue error"
+        return 503
       end
       {
         doc_key: "key for document #{filename}",

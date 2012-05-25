@@ -146,6 +146,7 @@ module NSICloudooo
         raise NSICloudooo::Errors::Client::KeyNotFoundError if response.code == "404"
         raise NSICloudooo::Errors::Client::MalformedRequestError if response.code == "400"
         raise NSICloudooo::Errors::Client::AuthenticationError if response.code == "401"
+        raise NSICloudooo::Errors::Client::QueueServiceConnectionError if response.code == "503"
         if response.code == "500" and response.body.include?("SAM")
           raise NSICloudooo::Errors::Client::SAMConnectionError
         end

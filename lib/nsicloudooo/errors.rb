@@ -18,6 +18,9 @@ module NSICloudooo
 
       class ConnectionRefusedError < RuntimeError
       end
+
+      class QueueServiceConnectionError < RuntimeError
+      end
     end
   end
 end
