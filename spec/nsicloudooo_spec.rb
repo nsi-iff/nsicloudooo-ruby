@@ -84,9 +84,14 @@ describe NSICloudooo do
       @nsicloudooo.grains_keys_for(key)["files"].should have(0).files
     end
 
-    it "raises an error whentrying to verify if non-existing key is done" do
+    it "raises an error when trying to verify if non-existing key is done" do
       expect { @nsicloudooo.done("dont")["done"].should be_false }.to raise_error(NSICloudooo::Errors::Client::KeyNotFoundError)
     end
+
+    it "raises an error when the server can't connect to the queue service" do
+      expect { @nsicloudooo.granulate(:file => 'document', :filename => 'queue error' ).should be_false }.to raise_error(NSICloudooo::Errors::Client::QueueServiceConnectionError)
+    end
+
   end
 
 end
