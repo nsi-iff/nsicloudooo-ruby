@@ -86,6 +86,11 @@ describe NSICloudooo do
       @nsicloudooo.grains_keys_for(key)["files"].should have(0).files
     end
 
+    it "can access the key of the thumbnail" do
+      key = @nsicloudooo.granulate(:file => 'document', :filename => '2secs.odt')["doc_key"]
+      @nsicloudooo.thumbnail_key_for(key).should_not be_nil
+    end
+
     it "raises an error when trying to verify if non-existing key is done" do
       expect { @nsicloudooo.done("dont")["done"].should be_false }.to raise_error(NSICloudooo::Errors::Client::KeyNotFoundError)
     end

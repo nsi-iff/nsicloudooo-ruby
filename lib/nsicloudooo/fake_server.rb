@@ -41,7 +41,7 @@ module NSICloudooo
           return {done: true}.to_json
         end
       elsif incoming.has_key? "doc_key"
-        return {:images => [], :files => []}.to_json
+        return {:images => [], :files => [], :thumbnail => ['thumbnail key',]}.to_json
       end
     return 404 if incoming["key"].include? "dont"
     end

@@ -131,6 +131,24 @@ module NSICloudooo
       execute_request(request)
     end
 
+    # Return the key of the thumbnail of a document
+    #
+    #
+    # @param [String] key of the desired document
+    # @return [String] key of the desired document's thumbnail 
+    #
+    # @example
+    #   nsicloudooo.thumbnail_key_for("some key")
+    #
+    # @raise NSICloudooo::Errors::Client::SAMConnectionError when cannot connect to the SAM node
+    # @raise NSICloudooo::Errors::Client::AuthenticationError when invalids user and/or password are provided
+    # @raise NSICloudooo::Errors::Client::KeyNotFoundError when an invalid key is provided
+    #
+    def thumbnail_key_for(document_key)
+      request = prepare_request :GET, {:doc_key => document_key}.to_json
+      execute_request(request)["thumbnail"]
+    end
+
     # Pre-configure the NSICloudooo module with default params for the NSICloudooo::Client
     #
     # @yield a Configuration object (see {NSICloudooo::Client::Configuration})
