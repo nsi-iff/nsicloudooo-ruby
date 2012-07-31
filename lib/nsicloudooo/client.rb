@@ -128,7 +128,7 @@ module NSICloudooo
     #
     def grains_keys_for(document_key)
       request = prepare_request :GET, {:doc_key => document_key}.to_json
-      execute_request(request)
+      execute_request(request).select {|chave| ['images', 'files'].include? chave}
     end
 
     # Return the key of the thumbnail of a document
