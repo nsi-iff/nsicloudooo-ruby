@@ -101,6 +101,18 @@ describe NSICloudooo do
 
   end
 
+  context "metadata extraction" do
+    it "can enqueue documents already stored to metadata extraction" do
+      response = @nsicloudooo.extract_metadata('some key', 'tcc')
+      response["doc_key"].should == 'some key'
+    end
+
+    it "can access the metadata key when it's already extracted" do
+      response = @nsicloudooo.extract_metadata('some key', 'tcc')
+      @nsicloudooo.metadata_key_for(response["doc_key"]).should == "metadata for #{response["doc_key"]}"
+    end
+  end
+
   context "get configuration" do
     before do
       NSICloudooo::Client.configure do

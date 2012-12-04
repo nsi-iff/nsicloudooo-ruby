@@ -135,7 +135,7 @@ module NSICloudooo
     #
     #
     # @param [String] key of the desired document
-    # @return [String] key of the desired document's thumbnail 
+    # @return [String] key of the desired document's thumbnail
     #
     # @example
     #   nsicloudooo.thumbnail_key_for("some key")
@@ -149,10 +149,47 @@ module NSICloudooo
       execute_request(request)["thumbnail"]
     end
 
+
+    # Enqueue a document to have its metadata extracted
+    #
+    #
+    # @param [String] key of the desired document
+    # @param [String] type of the desired document ('tcc' or 'event')
+    # @return [Hash] response
+    #   * "doc_key" [String] the key to access the granulated document if the sam node it was stored
+    #
+    # @raise NSICloudooo::Errors::Client::MissingParametersError when an invalid or incomplete set of parameters is provided
+    # @raise NSICloudooo::Errors::Client::SAMConnectionError when cannot connect to the SAM node
+    # @raise NSICloudooo::Errors::Client::AuthenticationError when invalids user and/or password are provided
+    # @raise NSICloudooo::Errors::Client::KeyNotFoundError when an invalid sam_uid is provided
+    #
+    def extract_metadata(document_key, type)
+      request = prepare_request :POST, {:sam_uid => document_key, :type => type, :metadata => true}.to_json
+      execute_request(request)
+    end
+
+    # Return the key of the metadata of a document
+    #
+    #
+    # @param [String] key of the desired document
+    # @return [String] key of the desired document's metadata or false if the metadata wasn't extracted yet
+    #
+    # @example
+    #   nsicloudooo.metadata_key_for("some key")
+    #
+    # @raise NSICloudooo::Errors::Client::SAMConnectionError when cannot connect to the SAM node
+    # @raise NSICloudooo::Errors::Client::AuthenticationError when invalids user and/or password are provided
+    # @raise NSICloudooo::Errors::Client::KeyNotFoundError when an invalid key is provided
+    #
+    def metadata_key_for(document_key)
+      request = prepare_request :GET, {:doc_key => document_key, :metadata => true}.to_json
+      execute_request(request)["metadata_key"]
+    end
+
     # Pre-configure the NSICloudooo module with default params for the NSICloudooo::Client
     #
     # @yield a Configuration object (see {NSICloudooo::Client::Configuration})
-    # 
+    #
     # @example
     #   NSICloudooo::Client.configure do
     #     user     "why"

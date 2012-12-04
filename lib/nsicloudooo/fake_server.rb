@@ -16,6 +16,10 @@ module NSICloudooo
       filename = incoming["filename"]
       filename = File.basename(incoming["doc_link"]) if incoming.has_key? "doc_link"
       callback = incoming["callback"] || nil
+      metadata = incoming['metadata']
+      unless metadata.nil?
+        return {doc_key: incoming["sam_uid"]}.to_json
+      end
       verb = incoming["verb"] || nil
       if filename.include? "secs"
         seconds = filename.split(".")[0].delete("secs").to_i
@@ -41,6 +45,9 @@ module NSICloudooo
           return {done: true}.to_json
         end
       elsif incoming.has_key? "doc_key"
+        if incoming.has_key? "metadata"
+          return {"metadata_key" => "metadata for #{incoming['doc_key']}"}.to_json
+        end
         return {:images => [], :files => [], :thumbnail => ['thumbnail key',]}.to_json
       end
     return 404 if incoming["key"].include? "dont"
