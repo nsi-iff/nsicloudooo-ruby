@@ -163,8 +163,10 @@ module NSICloudooo
     # @raise NSICloudooo::Errors::Client::AuthenticationError when invalids user and/or password are provided
     # @raise NSICloudooo::Errors::Client::KeyNotFoundError when an invalid sam_uid is provided
     #
-    def extract_metadata(document_key, type)
-      request = prepare_request :POST, {:sam_uid => document_key, :type => type, :metadata => true}.to_json
+    def extract_metadata(document_key, type, callback_url=nil, callback_verb=nil)
+      @request_data = {:sam_uid => document_key, :type => type, :metadata => true}
+      insert_callback_data {:callback => callback_url, :verb => callback_verb}
+      request = prepare_request :POST, @request_data.to_json
       execute_request(request)
     end
 
