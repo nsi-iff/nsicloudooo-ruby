@@ -165,7 +165,7 @@ module NSICloudooo
     #
     def extract_metadata(document_key, type, callback_url=nil, callback_verb=nil)
       @request_data = {:sam_uid => document_key, :type => type, :metadata => true}
-      insert_callback_data {:callback => callback_url, :verb => callback_verb}
+      insert_callback_data :callback => callback_url, :verb => callback_verb
       request = prepare_request :POST, @request_data.to_json
       execute_request(request)
     end
